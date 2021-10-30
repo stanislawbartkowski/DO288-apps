@@ -14,7 +14,6 @@ pipeline {
         DEV_PROJECT = "books-dev"
         STAGE_PROJECT = "books-stage"
         APP_GIT_URL = "https://github.com/stanislawbartkowski/DO288-apps"
-        NEXUS_SERVER = "http://nexus-common.apps.cluster.domain.example.com/repository/nodejs"
 
         // DO NOT CHANGE THE GLOBAL VARS BELOW THIS LINE
         APP_NAME = "books"
@@ -27,7 +26,6 @@ pipeline {
             steps {
                 echo '### Installing NPM dependencies ###'
                 sh '''
-                        npm config set registry ${NEXUS_SERVER}
                         cd books
                         npm install
                    '''
@@ -63,7 +61,6 @@ pipeline {
 sh '''
  oc project ${DEV_PROJECT}
  oc new-app --as-deployment-config --name books nodejs:12~${APP_GIT_URL} \
- --build-env npm_config_registry=${NEXUS_SERVER} \
  --context-dir ${APP_NAME}
  oc expose svc/${APP_NAME}
  '''
